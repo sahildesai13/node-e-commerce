@@ -25,7 +25,7 @@ router.post('/signup', user.userSignUp);
 router.post('/login', user.userLogin);
 router.get('/logout', user.userLogout);
 router.get('/dashboard', user.userDashboard);
-router.post('/cart', cart.addToCart);
+router.post('/cart/:id', cart.addToCart);
 // router.get('/cart', cart.getCart);
 
 

@@ -69,15 +69,14 @@ var transporter = nodemailer.createTransport({
 exports.userSignUp = async (req, res) => {
     let { name, email, password } = req.body;
     let existing = await User.findOne({ email });
-    console.log(existing);
     if (existing) {
         return res.status(201).json({
             message: "Employee already exist"
         });
     } else {
-        const hashedPassword = await bcrypt.hash(password, 10);
-        password = hashedPassword;
-        const user = new User({ name, email, password });
+        const hashedPassword = await bcrypt.hash(password, 12);
+        console.log("hashpass = ",hashedPassword);
+        const user = await new User({ name, email, password: hashedPassword });
         await user.save();
         var mailOptions = {
             from: 'sahildesai4050@gmail.com',

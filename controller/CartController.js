@@ -1,28 +1,57 @@
 const Cart = require('../model/CartModel');
 const User = require('../model/userModel');
+const Product = require('../model/ProductModel')
 const storage = require('node-persist');
 
 storage.init();
 
 exports.addToCart = async (req, res) => {
-    let userId = storage.getItem('userId');
-    if(userId){
+    let userId = await storage.getItem('userId');
+    console.log(userId);
+    if (userId) {
         let productId = req.params.id;
-        let existing = await Cart.findOne({userId,productId});
-        if(existing){
-            existing.quantity = existing.quantity + 1;
-            await existing.save();
+        let existing = await Cart.findOne({ userId, "product.productId": productId });
+        if (existing) {
+            console.log(existing.id);
+            var quantity = existing.product.forEach((ele) => {
+                if (ele.productId === productId) {
+                    return ele.quantity;
+                }
+            });
+            
+            var updateditem = await Cart.findByIdAndUpdate({id: existing.id ,})
+        //    var productItem = existing.product.forEach((ele) => {
+        //         if (ele.productId === productId) {
+        //             ele.quantity++;
+        //         }
+        //     });
+                await existing.save();
             res.status(201).json({
-                message: "Product added to cart successfully",
+                message: "Quantity has been updated",
                 cart: existing
             });
-        }else{
-            let cart = new Cart({ userId, productId, quantity: 1 });
-            await cart.save();
-            res.status(201).json({
-                message: "Product added to cart successfully",
-                cart: cart
-            });
         }
+         else {
+            let DataProduct = await Product.findById(productId);
+            console.log(DataProduct);
+            if (DataProduct) {
+                let cart = new Cart({ userId, product: [] });
+                cart.product.push({productId: productId, products:DataProduct, quantity:1});
+                await cart.save();
+                console.log(cart);
+                res.status(201).json({
+                    message: "Product added to cart successfully",
+                    cart: cart
+                });
+            } else {
+                res.status(200).json({
+                    message: "Product Not Found"
+                })
+            }
+        }
+    } else {
+        res.status(200).json({
+            message: "You Are Not Logged In"
+        })
     }
 }
