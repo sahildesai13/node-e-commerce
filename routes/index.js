@@ -14,7 +14,6 @@ const storage = multer.diskStorage({
   }
 });
 
-
 const upload = multer({ storage: storage })
 
 router.get('/', user.getData);
@@ -26,10 +25,10 @@ router.post('/login', user.userLogin);
 router.get('/logout', user.userLogout);
 router.get('/dashboard', user.userDashboard);
 router.post('/cart/:id', cart.addToCart);
-// router.get('/cart', cart.getCart);
-
-
-
+router.post('/updateCart/:id',cart.updateCart);
+router.post('/deleteSingleItem/:id',cart.deleteItem);
+router.post('/deleteCart',cart.DeleteCart)
+router.get('/showCart',cart.GetCart)
 // Admin login-Signup system--------------------------------------------
 router.post('/AdminSignUp', Admin.AdminSignUp);
 router.post('/AdminLogin', Admin.AdminLogin);

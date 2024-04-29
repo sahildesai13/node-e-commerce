@@ -11,9 +11,7 @@ const mongoose = require('mongoose');
 
 mongoose.connect('mongodb+srv://sahil7124:sahil7124@cluster0.bg4v9nv.mongodb.net/e-commerce').then(() => console.log('Connected to the DataBase!'));
 
-/**
- * Get port from environment and store in Express.
- */
+
 
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
